@@ -31,14 +31,6 @@ class FG_MATH2_ASSIGNMENTS_API UIntersectsHelper
 	FVector Max = FVector(AABBLocation.X + AABB->Size.X,
 	    AABBLocation.Y + AABB->Size.Y, AABBLocation.Z + AABB->Size.Z);
 
-	if (GEngine)
-	    GEngine->AddOnScreenDebugMessage(
-		-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(Min[0]));
-
-	if (GEngine)
-	    GEngine->AddOnScreenDebugMessage(
-		-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(Max[0]));
-
 	float sqDist = 0.0f;
 	for (int i = 0; i < 3; i++) {
 	    // for each axis count any excess distance outside box extents.

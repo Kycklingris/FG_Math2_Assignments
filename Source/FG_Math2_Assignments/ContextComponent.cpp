@@ -32,84 +32,49 @@ void UContextComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 }
 
 void UContextComponent::UpdateContext() {
-    USphereColliderComponent *ThisCollider =
-	GetOwner()->FindComponentByClass<USphereColliderComponent>();
-
     for (FRelatedContext &RelatedContext : this->RelatedObjects) {
-	// Empty the bitmask
-	RelatedContext.Context = 0;
-	{
-	    auto RelatedLocation =
-		Cast<AActor>(RelatedContext.Collider)->GetActorLocation();
-
-	    auto LocalSpaceLocation =
-		this->GetOwner()->GetActorTransform().InverseTransformPosition(
-		    RelatedLocation);
-
-	    if (LocalSpaceLocation.X < 0) {
-		RelatedContext.Context |=
-		    1 << static_cast<uint8>(EContext::Infront);
-	    } else {
-		RelatedContext.Context |=
-		    1 << static_cast<uint8>(EContext::Behind);
-	    }
-
-	    if (LocalSpaceLocation.Y < 0) {
-		RelatedContext.Context |=
-		    1 << static_cast<uint8>(EContext::ToRight);
-	    } else {
-		RelatedContext.Context |=
-		    1 << static_cast<uint8>(EContext::ToLeft);
-	    }
-
-	    if (LocalSpaceLocation.Z < 0) {
-		RelatedContext.Context |=
-		    1 << static_cast<uint8>(EContext::Above);
-	    } else {
-		RelatedContext.Context |=
-		    1 << static_cast<uint8>(EContext::Below);
-	    }
-	}
-
-	UColliderComponent *RelatedCollider =
-	    RelatedContext.Collider->FindComponentByClass<UColliderComponent>();
-
-	if (ThisCollider->CheckIntersection(RelatedCollider)) {
-	    RelatedContext.Context |= 1 << static_cast<uint8>(EContext::Inside);
-	}
+	RelatedContext.Context = GetContextFor(RelatedContext.Collider);
     }
 }
 
-// It no worky
-void UContextComponent::PrintContext() {
-    this->UpdateContext();
+uint8 UContextComponent::GetContextFor(AActor *Other) {
+    USphereColliderComponent *ThisCollider =
+	GetOwner()->FindComponentByClass<USphereColliderComponent>();
 
-    for (auto RelatedContext : this->RelatedObjects) {
+    // Empty the bitmask
+    uint8 Context = 0;
+    {
+	auto RelatedLocation = Cast<AActor>(Other)->GetActorLocation();
 
-	FString RelativeLocationString = "\"Player\" is ";
-	if (RelatedContext.Context & static_cast<uint8>(EContext::Infront)) {
-	    RelativeLocationString.Append(TEXT("In front of and "));
-	} else if (RelatedContext.Context &
-		   static_cast<uint8>(EContext::Behind)) {
-	    RelativeLocationString.Append(TEXT("Behind and "));
+	auto LocalSpaceLocation =
+	    this->GetOwner()->GetActorTransform().InverseTransformPosition(
+		RelatedLocation);
+
+	if (LocalSpaceLocation.X < 0) {
+	    Context |= 1 << static_cast<uint8>(EContext::Infront);
+	} else {
+	    Context |= 1 << static_cast<uint8>(EContext::Behind);
 	}
 
-	if (RelatedContext.Context & static_cast<uint8>(EContext::ToRight)) {
-	    RelativeLocationString.Append(TEXT("To the right and "));
-	} else if (RelatedContext.Context &
-		   static_cast<uint8>(EContext::ToLeft)) {
-	    RelativeLocationString.Append(TEXT("To the left and "));
+	if (LocalSpaceLocation.Y < 0) {
+	    Context |= 1 << static_cast<uint8>(EContext::ToRight);
+	} else {
+	    Context |= 1 << static_cast<uint8>(EContext::ToLeft);
 	}
 
-	if (RelatedContext.Context & static_cast<uint8>(EContext::Above)) {
-	    RelativeLocationString.Append(TEXT("Above and "));
-	} else if (RelatedContext.Context &
-		   static_cast<uint8>(EContext::Below)) {
-	    RelativeLocationString.Append(TEXT("Below and "));
+	if (LocalSpaceLocation.Z < 0) {
+	    Context |= 1 << static_cast<uint8>(EContext::Above);
+	} else {
+	    Context |= 1 << static_cast<uint8>(EContext::Below);
 	}
-
-	if (GEngine)
-	    GEngine->AddOnScreenDebugMessage(
-		-1, 15.0f, FColor::Yellow, *RelativeLocationString);
     }
+
+    UColliderComponent *RelatedCollider =
+	Other->FindComponentByClass<UColliderComponent>();
+
+    if (ThisCollider->CheckIntersection(RelatedCollider)) {
+	Context |= 1 << static_cast<uint8>(EContext::Inside);
+    }
+
+    return Context;
 }

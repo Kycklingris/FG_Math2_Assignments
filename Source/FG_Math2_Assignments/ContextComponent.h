@@ -45,6 +45,6 @@ class FG_MATH2_ASSIGNMENTS_API UContextComponent : public USceneComponent {
     UFUNCTION(CallInEditor)
     void UpdateContext();
 
-    UFUNCTION(CallInEditor)
-    void PrintContext();
+    UFUNCTION()
+    uint8 GetContextFor(class AActor *Other);
 };
