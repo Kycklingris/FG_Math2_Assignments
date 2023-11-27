@@ -7,14 +7,16 @@
 #include "AABBComponent.generated.h"
 
 /**
- * 
+ *
  */
-UCLASS()
-class FG_MATH2_ASSIGNMENTS_API UAABBComponent : public UColliderComponent
-{
-	GENERATED_BODY()
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
+class FG_MATH2_ASSIGNMENTS_API UAABBComponent : public UColliderComponent {
+    GENERATED_BODY()
 
-public:
-  virtual FVector CheckCollision(UColliderComponent *other) override;
-  virtual bool CheckIntersection(UColliderComponent *other) override;
+  public:
+    virtual FVector CheckCollision(UColliderComponent *other) override;
+    virtual bool CheckIntersection(UColliderComponent *other) override;
+
+    UPROPERTY(EditAnywhere)
+    FVector Size;
 };

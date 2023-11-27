@@ -9,7 +9,7 @@
 /**
  *
  */
-UCLASS()
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class FG_MATH2_ASSIGNMENTS_API USphereColliderComponent
     : public UColliderComponent {
     GENERATED_BODY()
@@ -17,4 +17,7 @@ class FG_MATH2_ASSIGNMENTS_API USphereColliderComponent
   public:
     virtual FVector CheckCollision(UColliderComponent *other) override;
     virtual bool CheckIntersection(UColliderComponent *other) override;
+
+    UPROPERTY(EditAnywhere)
+    float Radius = 0.0f;
 };
