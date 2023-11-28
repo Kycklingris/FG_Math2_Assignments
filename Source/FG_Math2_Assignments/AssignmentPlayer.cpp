@@ -42,6 +42,7 @@ void AAssignmentPlayer::Tick(float DeltaTime) {
     // True if there movement should be happening
     bool Input = !InputVector.IsNearlyZero(0.001);
 
+    // Interpolate the movement alpha
     if (Input && InputAlpha < 0.999f) {
 	if (TimeSince < 0.0f) {
 	    TimeSince = 0.0f;
@@ -66,6 +67,8 @@ void AAssignmentPlayer::Tick(float DeltaTime) {
     SetActorLocation(CurrentLocation, false, nullptr, ETeleportType::None);
 
     CheckCollision();
+
+    ShakeCamera(DeltaTime);
 }
 
 // Called to bind functionality to input
@@ -76,6 +79,7 @@ void AAssignmentPlayer::SetupPlayerInputComponent(
 
 void AAssignmentPlayer::Jump() {}
 
+// Runs on well, the E key.
 void AAssignmentPlayer::E() {
     for (AActor *BackstabBox : BackstabBoxes) {
 	if (!IsValid(BackstabBox)) {
@@ -84,6 +88,8 @@ void AAssignmentPlayer::E() {
 
 	auto Bitflags = Context->GetContextFor(BackstabBox);
 
+	// Would have liked to check both flags at the same time, but well,
+	// didn't get it to work.
 	if (Bitflags & 1 << static_cast<uint8>(EContext::Behind) &&
 	    Bitflags & 1 << static_cast<uint8>(EContext::Inside)) {
 	    if (GEngine)
@@ -115,11 +121,35 @@ void AAssignmentPlayer::CheckCollision() {
 
 	FVector OffsetDirection = FVector(0.0f, 0.0f, 1.0f);
 
-	OffsetDirection *= Val;
+	OffsetDirection *= -Val;
 
 	ThisLocation += OffsetDirection;
 
+	SetActorLocation(ThisLocation, false, nullptr, ETeleportType::None);
+
 	IsOnGround = true;
+
+	// If impact is severe enough start screen shake
+	if (GravityVelocity > 5.0f) {
+	    CameraShakeTimeLeft = 0.5f;
+	}
 	GravityVelocity = 0.0f;
     }
+}
+
+void AAssignmentPlayer::ShakeCamera(float DeltaTime) {
+    if (CameraShakeTimeLeft < 0.0f) {
+	Camera->SetRelativeLocation_Direct(CameraOffset);
+	return;
+    }
+
+    CameraShakeTimeLeft -= DeltaTime;
+
+    auto Z =
+	UEasingFunctions::OneDimNoise((0.5f - CameraShakeTimeLeft) * 10.0f);
+
+    auto TmpCameraOffset = CameraOffset;
+    TmpCameraOffset.Z += Z * 2.0f;
+
+    Camera->SetRelativeLocation_Direct(TmpCameraOffset);
 }

@@ -40,6 +40,9 @@ class FG_MATH2_ASSIGNMENTS_API AAssignmentPlayer : public APawn {
 	UPROPERTY(EditAnywhere)
 	float Gravity = 10.0f;
 
+	UPROPERTY(VisibleAnywhere)
+	float CameraShakeTimeLeft = 0.0f;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector CameraOffset;
 
@@ -70,6 +73,8 @@ class FG_MATH2_ASSIGNMENTS_API AAssignmentPlayer : public APawn {
 	void E();
 
 	void CheckCollision();
+
+	void ShakeCamera(float DeltaTime);
 
 	UPROPERTY(EditAnywhere)
 	TArray<class AActor *> CollisionObjects;

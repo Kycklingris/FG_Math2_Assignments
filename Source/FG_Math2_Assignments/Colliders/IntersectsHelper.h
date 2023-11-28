@@ -5,6 +5,7 @@
 #include "AABBComponent.h"
 #include "SphereColliderComponent.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "IntersectsHelper.generated.h"
 
 /**
@@ -17,7 +18,7 @@ class FG_MATH2_ASSIGNMENTS_API UIntersectsHelper
 
   public:
     // static float Collision(UAABBComponent *AABB, UAABBComponent *AABB2) {
-	// return 0.0f;
+    // return 0.0f;
     // };
 
     static float Collision(
@@ -42,15 +43,15 @@ class FG_MATH2_ASSIGNMENTS_API UIntersectsHelper
 		sqDist += (v - Max[i]) * (v - Max[i]);
 	    }
 	}
-	
-	return sqDist - (Sphere->Radius * Sphere->Radius);
+
+	return UKismetMathLibrary::Sqrt(sqDist) - Sphere->Radius;
     };
 
     // static float Collision(
-	// USphereColliderComponent *Sphere, USphereColliderComponent *Sphere2) {
-	// auto OneLocation = Sphere->GetOwner()->GetActorLocation();
-	// auto TwoLocation = Sphere2->GetOwner()->GetActorLocation();
+    // USphereColliderComponent *Sphere, USphereColliderComponent *Sphere2) {
+    // auto OneLocation = Sphere->GetOwner()->GetActorLocation();
+    // auto TwoLocation = Sphere2->GetOwner()->GetActorLocation();
 
-	// return 0.0f;
+    // return 0.0f;
     // };
 };
