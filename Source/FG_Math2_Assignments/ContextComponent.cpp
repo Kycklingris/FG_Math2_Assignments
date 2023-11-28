@@ -72,8 +72,10 @@ uint8 UContextComponent::GetContextFor(AActor *Other) {
     UColliderComponent *RelatedCollider =
 	Other->FindComponentByClass<UColliderComponent>();
 
-    if (ThisCollider->CheckIntersection(RelatedCollider)) {
-	Context |= 1 << static_cast<uint8>(EContext::Inside);
+    if (RelatedCollider != nullptr) {
+	if (ThisCollider->CheckIntersection(RelatedCollider)) {
+	    Context |= 1 << static_cast<uint8>(EContext::Inside);
+	}
     }
 
     return Context;

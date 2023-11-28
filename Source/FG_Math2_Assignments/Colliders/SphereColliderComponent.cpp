@@ -12,9 +12,6 @@ bool USphereColliderComponent::CheckIntersection(UColliderComponent *other) {
     if (other->IsA(UAABBComponent::StaticClass())) {
 	auto Val =
 	    UIntersectsHelper::Collision(Cast<UAABBComponent>(other), this);
-	if (GEngine)
-	    GEngine->AddOnScreenDebugMessage(
-		-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(Val));
 	if (Val < 0.0f) {
 	    return true;
 	}

@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-#include "UObject/ObjectPtr.h"
+#include "Templates/SubclassOf.h"
 #include "AssignmentPlayer.generated.h"
 
 UCLASS()
@@ -22,15 +22,23 @@ class FG_MATH2_ASSIGNMENTS_API AAssignmentPlayer : public APawn {
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FVector InputVector;
 
+    UPROPERTY(VisibleAnywhere)
+    float InputAlpha = 0.0f;
+
+    UPROPERTY(EditAnywhere)
+    float Speed = 10.0f;
+
+    UPROPERTY(VisibleAnywhere)
+    float TimeSince = 0.0f;
 
 	UPROPERTY(VisibleAnywhere)
-	float InputAlpha = 0.0f;
+	bool IsOnGround = false;
+
+	UPROPERTY(VisibleAnywhere)
+	float GravityVelocity = 0.0f;
 
 	UPROPERTY(EditAnywhere)
-	float Speed = 10.0f;
-
-	UPROPERTY(VisibleAnywhere)
-	float TimeSince = 0.0f;
+	float Gravity = 10.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector CameraOffset;
@@ -61,6 +69,11 @@ class FG_MATH2_ASSIGNMENTS_API AAssignmentPlayer : public APawn {
 	UFUNCTION(BlueprintCallable)
 	void E();
 
-	// UPROPERTY(EditAnywhere)
-	// TArray<TObjectPtr> CollisionObjects;
+	void CheckCollision();
+
+	UPROPERTY(EditAnywhere)
+	TArray<class AActor *> CollisionObjects;
+
+	UPROPERTY(EditAnywhere)
+	TArray<class AActor *> BackstabBoxes;
 };

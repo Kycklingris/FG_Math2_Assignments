@@ -16,9 +16,9 @@ class FG_MATH2_ASSIGNMENTS_API UIntersectsHelper
     GENERATED_BODY()
 
   public:
-    static float Collision(UAABBComponent *AABB, UAABBComponent *AABB2) {
-	return 0.0f;
-    };
+    // static float Collision(UAABBComponent *AABB, UAABBComponent *AABB2) {
+	// return 0.0f;
+    // };
 
     static float Collision(
 	UAABBComponent *AABB, USphereColliderComponent *Sphere) {
@@ -42,15 +42,15 @@ class FG_MATH2_ASSIGNMENTS_API UIntersectsHelper
 		sqDist += (v - Max[i]) * (v - Max[i]);
 	    }
 	}
-
+	
 	return sqDist - (Sphere->Radius * Sphere->Radius);
     };
 
-    static float Collision(
-	USphereColliderComponent *Sphere, USphereColliderComponent *Sphere2) {
-	auto OneLocation = Sphere->GetOwner()->GetActorLocation();
-	auto TwoLocation = Sphere2->GetOwner()->GetActorLocation();
+    // static float Collision(
+	// USphereColliderComponent *Sphere, USphereColliderComponent *Sphere2) {
+	// auto OneLocation = Sphere->GetOwner()->GetActorLocation();
+	// auto TwoLocation = Sphere2->GetOwner()->GetActorLocation();
 
-	return 0.0f;
-    };
+	// return 0.0f;
+    // };
 };

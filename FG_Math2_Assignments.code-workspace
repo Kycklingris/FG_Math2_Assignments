@@ -16,7 +16,10 @@
 			"*.ipp": "cpp",
 			"string": "cpp",
 			"filesystem": "cpp",
-			"xstring": "cpp"
+			"xstring": "cpp",
+			"ratio": "cpp",
+			"algorithm": "cpp",
+			"xutility": "cpp"
 		}
 	},
 	"extensions": {
